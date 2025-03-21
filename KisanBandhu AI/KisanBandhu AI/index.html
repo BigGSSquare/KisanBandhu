@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- External JavaScript files -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  
+  <!-- TensorFlow.js and MobileNet -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+
+  <!-- External CSS file -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <title>KisanBandhu AI</title>
+</head>
+<body class="min-h-screen" data-theme="dark">
+  <header class="bg-secondary text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-xl font-bold brand-title">KisanBandhu AI</h1>
+      <div class="flex space-x-4">
+        <!-- Light / Dark Mode Button -->
+        <button onclick="toggleTheme()" class="bg-accent hover:bg-green-700 text-white px-4 py-2 rounded">
+          Light / Dark Mode
+        </button>
+  
+        <!-- Language Selection Dropdown -->
+        <div class="relative">
+          <!-- The button that toggles the dropdown -->
+          <button 
+            id="languageButton" 
+            onclick="toggleLanguageDropdown()" 
+            class="bg-accent hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            Select Language
+          </button>
+  
+          <!-- The dropdown menu -->
+          <div 
+            id="languageDropdown" 
+            class="hidden absolute right-0 mt-2 bg-accent text-black-900 border rounded shadow-lg"
+          >
+            <button 
+              onclick="changeLanguage('en')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              English
+            </button>
+            <button 
+              onclick="changeLanguage('hi')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              हिंदी
+            </button>
+            <button 
+              onclick="changeLanguage('te')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              తెలుగు
+            </button>
+            <button 
+              onclick="changeLanguage('ta')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              தமிழ்
+            </button>
+            <button 
+              onclick="changeLanguage('ml')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              മലയാളം
+            </button>
+            <button 
+              onclick="changeLanguage('kn')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              ಕನ್ನಡ
+            </button>
+            <button 
+              onclick="changeLanguage('bn')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              বাংলা
+            </button>
+            <button 
+              onclick="changeLanguage('mr')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              मराठी
+            </button>
+            <button 
+              onclick="changeLanguage('ur')" 
+              class="block w-full text-left px-4 py-2 text-black-900 hover:bg-green-700"
+            >
+              اردو
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  
+  
+
+  <!-- Main Content -->
+  <main class="container mx-auto py-8 px-4">
+    <!-- Image Classifier Section -->
+    <div class="text-center space-y-4 bg-card p-6 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold">Scan Your Crop for Diseases</h2>
+      <input type="file" id="imageUpload" accept="image/*" class="block mx-auto p-2 border rounded">
+      <br>
+      <img id="imagePreview" width="300" class="mx-auto hidden border rounded-lg">
+      <p id="result" class="text-lg font-semibold mt-4"></p>
+      <div id="loadingIndicator" class="hidden">
+        <div class="spinner"></div>
+        <p>Analyzing image...</p>
+      </div>
+    </div>
+
+    <!-- Location-based Recommendations -->
+    <div class="text-center space-y-4 mt-8 bg-card p-6 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold">Get Location-Based Crop Recommendations</h2>
+      <button id="getLocationBtn" onclick="getLocationRecommendations()" class="bg-accent hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Get Recommendations
+      </button>
+      <div id="locationResults" class="hidden mt-4">
+        <p id="locationStatus"></p>
+        <div id="cropRecommendations" class="mt-4"></div>
+      </div>
+    </div>
+
+    <!-- Chatbot Buttons -->
+    <div class="text-center space-y-4 mt-8">
+      <button id="login-btn" onclick="showLoginForm()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        Login with Email
+      </button>
+      <button id="guest-btn" onclick="showChatbot()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Continue as Guest
+      </button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm" class="hidden max-w-md mx-auto mt-8 bg-card p-8 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold mb-4">OTP Verification</h2>
+      <input type="email" id="email" placeholder="Enter your email" required class="w-full p-2 mb-4 border rounded">
+      <button onclick="sendOTP()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full mb-4">
+        Send OTP
+      </button>
+      <input type="text" id="otp" placeholder="Enter OTP" required class="w-full p-2 mb-4 border rounded">
+      <button onclick="verifyOTP()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+        Verify OTP
+      </button>
+      <p id="message" class="mt-4 text-center"></p>
+    </div>
+
+    <!-- Chatbot Section -->
+    <div id="chatbotSection" class="hidden max-w-4xl mx-auto mt-8 bg-card rounded-lg shadow-lg overflow-hidden">
+      <div class="bg-accent text-white p-4 flex justify-between items-center">
+        <h2 class="text-xl font-bold">Chat with KisanBandhu AI</h2>
+        <button onclick="closeChatbot()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+          Close
+        </button>
+      </div>
+      <div class="h-[600px]">
+        <iframe id="chatbotFrame" width="100%" height="100%" style="border:none;" title="KisanBandhu AI Chatbot"></iframe>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JavaScript for Image Classification -->
+  <script>
+    async function classifyImage() {
+        const imgElement = document.getElementById('imagePreview');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultElement = document.getElementById('result');
+        
+        try {
+            loadingIndicator.classList.remove('hidden');
+            resultElement.innerText = '';
+            
+            // Load the MobileNet model
+            const model = await mobilenet.load();
+            
+            // Classify the image
+            const predictions = await model.classify(imgElement);
+            
+            // Display the results
+            if (predictions && predictions.length > 0) {
+                const topPrediction = predictions[0];
+                resultElement.innerHTML = `
+                    <div class="p-4 bg-accent bg-opacity-10 rounded-lg">
+                        <p class="font-bold">Detected: ${topPrediction.className}</p>
+                        <p>Confidence: ${(topPrediction.probability * 100).toFixed(2)}%</p>
+                    </div>
+                `;
+                
+                // Add more detailed analysis for common crops
+                if (topPrediction.className.toLowerCase().includes('corn') || 
+                    topPrediction.className.toLowerCase().includes('maize')) {
+                    resultElement.innerHTML += `
+                        <div class="mt-4 p-4 bg-blue-100 rounded-lg text-left">
+                            <p class="font-bold">Crop Analysis:</p>
+                            <p>This appears to be corn/maize. Common diseases include:</p>
+                            <ul class="list-disc pl-5 mt-2">
+                                <li>Northern Corn Leaf Blight</li>
+                                <li>Gray Leaf Spot</li>
+                                <li>Common Rust</li>
+                            </ul>
+                        </div>
+                    `;
+                } else if (topPrediction.className.toLowerCase().includes('rice')) {
+                    resultElement.innerHTML += `
+                        <div class="mt-4 p-4 bg-blue-100 rounded-lg text-left">
+                            <p class="font-bold">Crop Analysis:</p>
+                            <p>This appears to be rice. Common diseases include:</p>
+                            <ul class="list-disc pl-5 mt-2">
+                                <li>Rice Blast</li>
+                                <li>Bacterial Leaf Blight</li>
+                                <li>Sheath Blight</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            } else {
+                resultElement.innerText = 'Could not identify the image. Please try another image.';
+            }
+        } catch (error) {
+            console.error('Error classifying image:', error);
+            resultElement.innerText = 'Error analyzing image. Please try again.';
+        } finally {
+            loadingIndicator.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('imageUpload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('imagePreview');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                
+                // Wait for the image to load before classifying
+                img.onload = classifyImage;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+  </script>
+
+  <!-- Main JavaScript files -->
+  <script src="main.js"></script>
+  <script src="location.js"></script>
+</body>
+</html>

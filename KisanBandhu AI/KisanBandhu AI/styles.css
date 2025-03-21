@@ -1,0 +1,257 @@
+:root {
+    --bg-color: #111827;
+    --text-color: #e5e7eb;
+    --secondary-color: #374151;
+    --accent-color: #22c55e;
+    --input-bg: #1f2937;
+    --border-color: #4b5563;
+    --card-bg: #1e293b;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] {
+    --bg-color: #f3f4f6;
+    --text-color: #111827;
+    --secondary-color: #d1d5db;
+    --accent-color: #22c55e;
+    --input-bg: #ffffff;
+    --border-color: #9ca3af;
+    --card-bg: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .brand-title {
+    color: #28a745;
+}
+
+[data-theme="dark"] #loginForm h2,
+[data-theme="dark"] #message {
+    color: var(--text-color);
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.bg-secondary { 
+    background-color: var(--secondary-color);
+}
+
+.bg-accent { 
+    background-color: var(--accent-color);
+}
+
+.bg-card {
+    background-color: var(--card-bg);
+}
+
+.text-white { 
+    color: var(--text-color);
+}
+
+.border { 
+    border-color: var(--border-color);
+}
+
+input { 
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Card Styling */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 2px 4px 12px var(--shadow-color);
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+/* Dropdown Styling */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--card-bg);
+    box-shadow: 0px 4px 10px var(--shadow-color);
+    border-radius: 5px;
+    text-align: left;
+    margin-top: 5px;
+    width: 200px;
+    z-index: 1000;
+  }
+  
+  .dropdown-menu li {
+    padding: 10px;
+    cursor: pointer;
+    list-style-type: none;
+    color: var(--text-color);
+  }
+  
+  .dropdown-menu li:hover {
+    background: var(--accent-color);
+    color: white;
+  }
+  
+  /* Utility class to hide the dropdown */
+  .hidden {
+    display: none !important;
+  }
+  
+
+.dropdown-item {
+    padding: 10px;
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: var(--accent-color);
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Voice Assistant Button Pulse Animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+.pulse {
+    animation: pulse 1.5s infinite;
+}
+
+/* Crop Recommendation Styling */
+.recommendation-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    background-color: var(--input-bg);
+}
+
+.high-suitability {
+    border-left: 4px solid #22c55e;
+}
+
+.medium-suitability {
+    border-left: 4px solid #eab308;
+}
+
+.low-suitability {
+    border-left: 4px solid #ef4444;
+}
+
+/* Voice Status Tooltip */
+#voiceStatus {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    max-width: 250px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    transition: all 0.3s ease;
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: 10px;
+}
+
+#voiceStatus p {
+    margin: 0;
+}
+
+#voiceStatus .text-xs {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Language Dropdown Improvements */
+.dropdown-menu {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Voice Button Improvements */
+#voiceAssistantBtn {
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+#voiceAssistantBtn:hover {
+    transform: scale(1.1);
+}
+
+#voiceAssistantBtn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    #voiceStatus {
+        width: 200px;
+        right: 0;
+    }
+    
+    .dropdown-menu {
+        width: 150px;
+    }
+}
